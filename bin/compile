@@ -13,9 +13,7 @@ function indent() {
 }
 
 echo -n "-----> Fetching YUI Compressor 2.4.8..."
-mkdir "yui"
-cd yui
-curl --silent --location https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar
+wget https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar
 
 echo "-----> Compressing CSS files..."
 find $BUILD_DIR -iregex ".*\.css" \! -iregex ".*\.min\.css" | while read -r cssfile
