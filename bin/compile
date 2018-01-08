@@ -16,7 +16,7 @@ echo -n "-----> Fetching YUI Compressor 2.4.8..."
 wget https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar
 
 echo "-----> Compressing CSS files..."
-find $BUILD_DIR -iregex ".*\.css" \! -iregex ".*\.min\.css" | while read -r cssfile
+find $BUILD_DIR -name '*.css' | grep -v 'min\.css' | while read -r cssfile
 do
   echo -n "-----> compressing ${cssfile#*$BUILD_DIR/}..." | indent
   java -jar yuicompressor-2.4.8.jar --type css -o "$cssfile" "$cssfile" | indent
@@ -25,7 +25,7 @@ done
 echo "       done."
 
 echo "-----> Compressing JS files..."
-find $BUILD_DIR -iregex ".*\.js" \! -iregex ".*\.min\.js" | while read -r jsfile
+find $BUILD_DIR -name '*.js' | grep -v 'min\.js' | while read -r jsfile
 do
   echo -n "-----> compressing ${jsfile#*$BUILD_DIR/}..." | indent
   java -jar yuicompressor-2.4.8.jar --type css -o "$jsfile" "$jsfile" | indent
