@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+# fail fast
+set -e
+
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+    Darwin) sed -l "$c";;
+    *)      sed -u "$c";;
+  esac
+}
+
+echo -n "-----> Fetching YUI Compressor 2.4.8..."
+mkdir "yui"
+cd yui
+curl --silent --location https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar
+
+echo "-----> Compressing CSS files..."
+find $BUILD_DIR -iregex ".*\.css" \! -iregex ".*\.min\.css" | while read -r cssfile
+do
+  echo -n "-----> compressing ${cssfile#*$BUILD_DIR/}..." | indent
+  java -jar yuicompressor-2.4.8.jar --type css -o "$cssfile" "$cssfile" | indent
+  echo "done"
+done
+echo "       done."
+
+echo "-----> Compressing JS files..."
+find $BUILD_DIR -iregex ".*\.js" \! -iregex ".*\.min\.js" | while read -r jsfile
+do
+  echo -n "-----> compressing ${jsfile#*$BUILD_DIR/}..." | indent
+  java -jar yuicompressor-2.4.8.jar --type css -o "$jsfile" "$jsfile" | indent
+  echo "done"
+done
+echo "       done."
+
